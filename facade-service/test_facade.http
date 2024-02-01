@@ -1,0 +1,8 @@
+GET http://localhost:3000/facade
+
+###
+
+POST http://localhost:3000/facade
+Content-Type: application/json
+
+{"message" : "i deleted a facade so now i have to use json"}
