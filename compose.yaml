@@ -1,0 +1,9 @@
+services:
+  facade:
+    build: ./facade-service/
+    ports:
+      - "3000:3000"
+  logging:
+    build: ./logging-service/
+  messages:
+    build: ./messages-service/

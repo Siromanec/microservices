@@ -1,11 +1,11 @@
-var express = require('express');
-var uuidv4 = require('uuid').v4;
-var router = express.Router();
+const express = require('express');
+const uuidv4 = require('uuid').v4;
+const router = express.Router();
 
 
 /* GET facade */
 router.get('/', (req, res, next) => {
-    const loggingPromise = fetch("http://localhost:8080/logging")
+    const loggingPromise = fetch("http://logging:8080")
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -17,7 +17,7 @@ router.get('/', (req, res, next) => {
             next(error);
         });
 
-    const messagesPromise = fetch("http://127.0.0.1:8000/messages")
+    const messagesPromise = fetch("http://messages:8000")
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -30,7 +30,13 @@ router.get('/', (req, res, next) => {
         });
 
     Promise.all([loggingPromise, messagesPromise])
-        .then(([loggingString, messagesString]) => loggingString + ":" + messagesString)
+        .then(([loggingString, messagesString]) => {
+            if (loggingString === undefined)
+                throw new Error('Logging response is undefined');
+            if (messagesString === undefined)
+                throw new Error('Messages response is undefined');
+            return `${loggingString}:${messagesString}`;
+        })
         .then((response) => {
             console.log("Sending response:");
             console.log(response);
@@ -45,7 +51,7 @@ router.get('/', (req, res, next) => {
 /* POST facade */
 router.post('/', (req, res, next) => {
     console.log(req.body)
-    fetch("http://localhost:8080/logging", {
+    fetch("http://logging:8080", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json'
