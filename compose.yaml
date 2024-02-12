@@ -3,7 +3,31 @@ services:
     build: ./facade-service/
     ports:
       - "3000:3000"
+    depends_on:
+      logging:
+        condition: service_started
+      messages:
+        condition: service_started
+#    environment:
+#      - LOGGING_SERVICE_PORTS=${LOGGING_SERVICE_PORT}
   logging:
     build: ./logging-service/
+#    depends_on:
+#      - hazelcast
+#    environment:
+#      - SERVER_PORT=${LOGGING_SERVICE_PORT}
   messages:
     build: ./messages-service/
+#  hazelcast:
+#    image: hazelcast/hazelcast
+#    pull_policy: missing
+#    environment:
+#      - HAZELCAST_PORT
+#  management-center:
+#    image: hazelcast/management-center:5.3.3
+#    pull_policy: missing
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      - MC_DEFAULT_CLUSTER=dev
+#      - MC_DEFAULT_CLUSTER_MEMBERS=hazelcast
