@@ -8,7 +8,6 @@ class PortSelectionStrategyStaticFactory {
      * @return {IPortSelectionStrategy | undefined}
      */
     static get(portsEnvVar) {
-
         if (portsEnvVar === undefined) {
             return new SinglePortSelectionStrategy(undefined);
         }
