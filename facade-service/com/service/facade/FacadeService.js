@@ -1,3 +1,4 @@
+const {OutMessage} = require("./domain/message/OutMessage");
 
 class FacadeService {
     /**
@@ -35,7 +36,7 @@ class FacadeService {
         if (message === undefined) {
             return Promise.reject(new Error("'message' is undefined"));
         }
-        return this.loggingService.save(message);
+        return this.loggingService.save(new OutMessage(message));
     }
 }
 

@@ -1,5 +1,3 @@
-const uuidv4 = require('uuid').v4;
-
 /**
  * remote service
  * */
@@ -35,7 +33,7 @@ class LoggingService {
 
     /**
      * @throws {Error} 'Network response was not ok. Logging failed.'
-     * @param {string} message
+     * @param {OutMessage} message
      * @return Promise<Response>
      * */
     async save(message) {
@@ -44,7 +42,7 @@ class LoggingService {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({uuid: uuidv4(), message: message})
+            body: message.toString()
         })
             .then(response => {
                 if (!response.ok) {
