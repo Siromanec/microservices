@@ -10,3 +10,5 @@ send 10 messages
 ```
 ./query.sh
 ```
+
+see compose.yaml for enviroment variables. they should be self-explanotory
