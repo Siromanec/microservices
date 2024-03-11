@@ -5,12 +5,11 @@ function scale_logging() {
 
 
     LOGGING_SERVICE_PORTS=""
-    export LOGGING_SERVICE_PORT="$BASE_PORT"
 
     for i in $(seq $N); do
 #      echo "Creating logging service..."
       export LOGGING_USE_HAZELCAST=1
-
+      export LOGGING_SERVICE_PORT="$((BASE_PORT + i - 1))"
       LOGGING_SERVICE_PORTS+="$LOGGING_SERVICE_PORT "
       docker compose up        \
         --scale logging="$i"   \
@@ -20,7 +19,7 @@ function scale_logging() {
         --scale messages=0 \
         --detach --no-recreate
 
-      export LOGGING_SERVICE_PORT="$((BASE_PORT + i))"
+
 
     done;
 
@@ -28,7 +27,7 @@ function scale_logging() {
 }
 docker compose build
 NLOGGERS=3
-export LOGGING_SERVICE_PORTS=$(scale_logging $NLOGGERS "6666")
+export LOGGING_SERVICE_PORTS=$(scale_logging $NLOGGERS "8080")
 docker compose up        \
   --scale logging="$NLOGGERS"   \
   --scale hazelcast="$NLOGGERS" \
@@ -36,9 +35,7 @@ docker compose up        \
   --scale facade=1 \
   --scale messages=1 \
   --detach --no-recreate
-echo "press Enter to stop"
-read -r
-docker compose stop
+echo "'docker compose stop' to stop"
 
 
 

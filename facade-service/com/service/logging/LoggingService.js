@@ -21,7 +21,9 @@ class LoggingService {
      * @returns {Promise<string>}
      * */
     async getMessages() {
-        return fetch(`http://${this.defaultIP}:${this.portSelectionStrategy.getPort() || this.defaultPort }`)
+        const port = this.portSelectionStrategy.getPort();
+        console.log(`selected logging service \`http://${this.defaultIP}:${port || this.defaultPort}\``)
+        return fetch(`http://${this.defaultIP}:${port || this.defaultPort }`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -37,7 +39,9 @@ class LoggingService {
      * @return Promise<Response>
      * */
     async save(message) {
-        return fetch(`http://${this.defaultIP}:${this.portSelectionStrategy.getPort() || this.defaultPort}`, {
+        const port = this.portSelectionStrategy.getPort();
+        console.log(`selected logging service \`http://${this.defaultIP}:${port || this.defaultPort}\``)
+        return fetch(`http://${this.defaultIP}:${port || this.defaultPort}/`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'

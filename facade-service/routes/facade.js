@@ -10,9 +10,7 @@ const {PortSelectionStrategyStaticFactory} = require("../com/port-selection/Port
 
 const loggingService = new LoggingService(PortSelectionStrategyStaticFactory.get(process.env.LOGGING_SERVICE_PORTS));
 const messagesService = new MessageService(PortSelectionStrategyStaticFactory.get(process.env.MESSAGES_SERVICE_PORTS));
-
 const facadeService = new FacadeService(loggingService, messagesService)
-
 const facadeController = new FacadeController(facadeService)
 
 

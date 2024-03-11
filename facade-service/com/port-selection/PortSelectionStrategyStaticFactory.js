@@ -12,7 +12,8 @@ class PortSelectionStrategyStaticFactory {
             return new SinglePortSelectionStrategy(undefined);
         }
 
-        const ports = portsEnvVar.split(" ");
+        const ports = portsEnvVar.split(" ").filter(Number);
+        console.log(ports)
 
         if (ports.length === 1) {
             return new SinglePortSelectionStrategy(ports[0]);
