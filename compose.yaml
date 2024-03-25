@@ -8,8 +8,11 @@ services:
         condition: service_started
       messages:
         condition: service_started
+      rabbitmq:
+        condition: service_started
     environment:
       - LOGGING_SERVICE_PORTS=${LOGGING_SERVICE_PORTS}
+      - MESSAGES_SERVICE_PORTS=${MESSAGES_SERVICE_PORTS}
   logging:
     build: ./logging-service/
     depends_on:
@@ -20,9 +23,17 @@ services:
       - USE_HAZELCAST=${LOGGING_USE_HAZELCAST}
   messages:
     build: ./messages-service/
+    environment:
+      - SERVER_PORT=${MESSAGES_SERVICE_PORT}
+    depends_on:
+      rabbitmq:
+        condition: service_started
   hazelcast:
     image: hazelcast/hazelcast
     pull_policy: missing
+    depends_on:
+      management-center:
+        condition: service_started
   management-center:
     image: hazelcast/management-center:5.3.3
     pull_policy: missing
@@ -31,3 +42,5 @@ services:
     environment:
       - MC_DEFAULT_CLUSTER=dev
       - MC_DEFAULT_CLUSTER_MEMBERS=hazelcast
+  rabbitmq:
+    image: rabbitmq

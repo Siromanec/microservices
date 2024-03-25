@@ -1,6 +1,7 @@
 /**
  * remote service
  * */
+const amqp = require("amqplib")
 class MessageService {
     /**
      * @param {IPortSelectionStrategy | undefined} portSelectionStrategy
@@ -13,7 +14,23 @@ class MessageService {
          * */
         this.portSelectionStrategy = portSelectionStrategy;
         this.defaultPort = "8000";
-        this.defaultIP = "messages"
+        this.defaultIP = "messages";
+        this.queue = "task_queue";
+        (async () => {
+            try {
+                this.connection = await amqp.connect("amqp://rabbitmq");
+                this.channel = await this.connection.createChannel();
+
+                await this.channel.assertQueue(this.queue, { durable: true });
+
+                // await channel.close();
+            } catch (err) {
+                console.warn(err);
+            }
+            // finally {
+            //     if (this.connection) await this.connection.close();
+            // }
+        })()
 
     }
 
@@ -30,6 +47,15 @@ class MessageService {
                 return response.json();
             })
             .then((data) => JSON.stringify(data))
+    }
+
+    /**
+     * @param {String} message
+     * */
+
+    async save(message) {
+        this.channel.sendToQueue(this.queue, Buffer.from(message));
+        console.log(" [x] Sent '%s to message queue'", message);
     }
 
 }

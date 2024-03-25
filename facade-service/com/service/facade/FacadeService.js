@@ -30,13 +30,15 @@ class FacadeService {
 
     /**
      * @param {string} message
-     * @return {Promise<Response>}
+     *
      * */
     async save(message) {
         if (message === undefined) {
             return Promise.reject(new Error("'message' is undefined"));
         }
-        return this.loggingService.save(new OutMessage(message));
+        const loggingPromise = this.loggingService.save(new OutMessage(message));
+        const messagePromise = this.messageService.save(message);
+        return Promise.all([loggingPromise, messagePromise]);
     }
 }
 
